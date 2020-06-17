@@ -1,4 +1,22 @@
 // query selector variables go here 👇
+// ~~~~~~~Buttons~~~~~~~~~~~~
+var makeYourOwnPosterBtn = document.querySelector('.show-form');
+var showSavedBtn = document.querySelector('.show-saved');
+var backToMain = document.querySelector('.back-to-main');
+var showMain = document.querySelector('.show-main');
+var makePoster = document.querySelector('.make-poster')
+//~~~~~~~~~input fields~~~~~~~~~~
+var usersImage = document.querySelector('#poster-image-url');
+var usersTitle = document.querySelector('#poster-title');
+var usersQuote = document.querySelector('#poster-quote');
+//~~~~~~~~~sections~~~~~~~~~~
+var formSection = document.querySelector('.poster-form');
+var mainPageSection = document.querySelector('.main-poster');
+var savedPostersSection = document.querySelector('.saved-posters');
+//~~~~~~~~~~new poster article~~~~~~
+var newPoster = document.querySelector('.poster')
+
+window.onload = displayRandomPoster;
 
 // we've provided you with some data to work with 👇
 var images = [
@@ -99,19 +117,79 @@ var quotes = [
   "A champion is defined not by their wins but by how they can recover when they fall."
 ];
 var savedPosters = [
-  makePoster(
+  new Poster (
     "https://i.giphy.com/media/5LU6ZcEGBbhVS/giphy.gif",
     "Optimism",
     "Keep a joyful heart!"
   )
 ];
 var currentPoster;
-
 // event listeners go here 👇
-
+makeYourOwnPosterBtn.addEventListener('click', displayForm);
+showSavedBtn.addEventListener('click', showSavedPosters);
+backToMain.addEventListener('click', takeMeToMain);
+showMain.addEventListener('click', takeMeToMain);
+makePoster.addEventListener('click', createUsersPoster)
 // functions and event handlers go here 👇
-// (we've provided one for you to get you started)!
+function displayRandomPoster() {
+    newPoster.innerHTML = '';
+    newPoster.innerHTML +=
+    `<img class="poster-img" src="${images[getRandomIndex(images)]}" alt="nothin' to see here">
+    <h1 class="poster-title">${titles[getRandomIndex(titles)]}</h1>
+    <h3 class="poster-quote">${quotes[getRandomIndex(quotes)]}</h3>`;
+}
+
+function displayUsersPoster() {
+  newPoster.innerHTML = '';
+  newPoster.innerHTML +=
+  `
+  <img class="poster-img" src="${images[0]}" alt="nothin' to see here">
+  <h1 class="poster-title">${titles[0]}</h1>
+  <h3 class="poster-quote">${quotes[0]}</h3>
+  `;
+}
+
+function createUsersPoster(event) {
+  event.preventDefault()
+  saveUsersData()
+  currentPoster = new Poster(images[0], titles[0], quotes[0]);
+  displayUsersPoster()
+  takeMeToMain()
+}//after the usersinformation is stored in the arrays, i assigned the currentPoster variable to an instance of the  Poster class name and by definifn the index number making sure it will always get the firs element of the array
+
+function saveUsersData() {
+  images.unshift(document.querySelector('#poster-image-url').value);
+  titles.unshift(document.querySelector('#poster-title').value);
+  quotes.unshift(document.querySelector('#poster-quote').value);
+}// the users information is stored in it's  specific array
+
+function takeMeToMain() {
+  //remove hidden form main and add hidden to savedPostersSection
+  mainPageSection.classList.remove('hidden')
+  savedPostersSection.classList.add('hidden')
+}
+
+function showSavedPosters() {
+  mainPageSection.classList.add('hidden')
+  savedPostersSection.classList.remove('hidden')
+}
+
+function displayForm() {
+ formSection.classList.remove('hidden');
+ mainPageSection.classList.add('hidden');
+}
+
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
 
+
+
+// On the new poster form view, users should be able to fill out the three input fields and then hit the show my poster button
+// When the show my poster button is clicked, several things will happen:
+// Save the submitted data into the respective arrays (image URL into the images array, etc) so that future random posters can use the user-created data
+
+
+// Use the values from the inputs to create a new instance of our Poster class
+// Change back to the main poster view (hiding the form view again)
+// Display the newly created poster image, title, and quote in the main view
